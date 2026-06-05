@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>618 爆单嘉年华 · 代码填空挑战｜口红·电脑·手机</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff4d6d;
+            --primary-dark: #c9184a;
+            --gold: #ffb703;
+            --code-bg: #1e293b;
+            --card-radius: 32px;
+            --shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            background: linear-gradient(145deg, #fff3ed 0%, #ffe0d4 100%);
+            font-family: 'Segoe UI', 'PingFang SC', 'Roboto', 'Courier New', monospace;
+            padding: 24px 16px 48px;
+            min-height: 100vh;
+        }
+
+        .mall-container {
+            max-width: 860px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 28px 24px;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: #ffd60a;
+            color: #9a2e2e;
+            padding: 5px 16px;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* 商品区 */
+        .goods-area {
+            padding: 22px 24px;
+            background: #fffaf7;
+            border-bottom: 2px solid #ffd9cc;
+        }
+
+        .goods-grid {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .goods-card {
+            background: white;
+            border-radius: 28px;
+            padding: 14px 12px;
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid #ffc9b5;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .goods-card:active { transform: scale(0.96); background: #fff1e8; }
+        .goods-emoji { font-size: 2.2rem; }
+        .goods-title { font-weight: 800; margin: 6px 0 4px; }
+        .goods-price { color: var(--primary); font-weight: bold; font-size: 1.2rem; }
+
+        .cart-summary {
+            background: #fff2e9;
+            border-radius: 60px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .total-money {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            background: white;
+            padding: 4px 20px;
+            border-radius: 40px;
+        }
+
+        .vip-tag {
+            display: none; /* 隐藏VIP相关区域 */
+        }
+        select { border-radius: 30px; padding: 6px 12px; border: 1px solid #ffb38b; font-weight: bold;}
+
+        .clear-cart {
+            background: #e0cfc4;
+            border: none;
+            border-radius: 40px;
+            padding: 6px 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* 代码填空区 - 所有黄色框初始完全空白（无任何占位符） */
+        .code-lab {
+            padding: 24px;
+        }
+
+        .rule-note {
+            background: #fef3e0;
+            padding: 12px 18px;
+            border-radius: 24px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            border-left: 6px solid var(--gold);
+        }
+
+        .code-panel {
+            background: var(--code-bg);
+            border-radius: 28px;
+            padding: 22px;
+            font-family: 'Fira Code', 'Monaco', monospace;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+
+        .code-line {
+            margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        /* 全空黄色填空块 — 视觉上完全空白，无默认文字 */
+        .blank-yellow {
+            background: #f7e05e;
+            border: 2px solid #e2a526;
+            border-radius: 24px;
+            padding: 5px 10px;
+            font-family: 'Fira Code', monospace;
+            font-weight: bold;
+            font-size: 0.85rem;
+            width: 85px;
+            text-align: center;
+            color: #1e293b;
+            outline: none;
+        }
+        .blank-short { width: 65px; }
+        .blank-colon { width: 50px; }
+        .blank-op { width: 60px; }
+        .blank-assign { width: 55px; }
+
+        .comment-light { color: #94a3b8; font-size: 0.7rem; margin-left: 6px; }
+
+        .action-group {
+            display: flex;
+            gap: 15px;
+            margin: 28px 0 20px;
+        }
+        .btn-run {
+            background: linear-gradient(90deg, var(--primary), var(--gold));
+            border: none;
+            padding: 14px 0;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            flex: 2;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-run:active { transform: scale(0.97);}
+        .btn-reset {
+            background: #475569;
+            border: none;
+            border-radius: 60px;
+            font-weight: bold;
+            color: white;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .result-area {
+            background: #f8fafc;
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid #ffe2cf;
+        }
+        .final-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .trace-box {
+            background: #ffffffd9;
+            border-radius: 20px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 12px;
+            border-left: 5px solid var(--gold);
+        }
+        .error-trace { background: #ffe8e6; border-left-color: #d9534f; color: #b91c1c; }
+
+        footer {
+            background: #fef7f0;
+            text-align: center;
+            padding: 14px;
+            font-size: 0.7rem;
+            color: #957b64;
+            border-top: 1px solid #f3e2d4;
+        }
+    </style>
+</head>
+<body>
+<div class="mall-container">
+    <div class="hero">
+        <h1>💄 618 美妆数码爆单节 💻 <span style="font-size: 1rem;">📝 代码填空 · 全空白挑战</span></h1>
+        <p>✏️ 黄色区域【完全为空】 —— 请手动填写 if / elif / else / 比较符(>=) / 冒号(:) / 等号(=) ，然后运行验证满减规则</p>
+        <div class="badge">🎁 满200减20 · 满500减60 · 满1000减150 (先判断高门槛再判断低门槛)</div>
+    </div>
+
+    <!-- 爆单商品: 口红/电脑/手机/耳机 -->
+    <div class="goods-area">
+        <div class="goods-grid">
+            <div class="goods-card" data-name="💄 魅色口红" data-price="320">
+                <div class="goods-emoji">💄</div>
+                <div class="goods-title">魅色口红</div>
+                <div class="goods-price">¥320</div>
+            </div>
+            <div class="goods-card" data-name="💻 轻薄本" data-price="5299">
+                <div class="goods-emoji">💻</div>
+                <div class="goods-title">轻薄本电脑</div>
+                <div class="goods-price">¥5299</div>
+            </div>
+            <div class="goods-card" data-name="📱 影像旗舰" data-price="3999">
+                <div class="goods-emoji">📱</div>
+                <div class="goods-title">影像手机</div>
+                <div class="goods-price">¥3999</div>
+            </div>
+            <div class="goods-card" data-name="🎧 降噪耳机" data-price="680">
+                <div class="goods-emoji">🎧</div>
+                <div class="goods-title">降噪耳机</div>
+                <div class="goods-price">¥680</div>
+            </div>
+        </div>
+        <div class="cart-summary">
+            <span>🛒 购物车总额</span>
+            <span class="total-money" id="cartTotal">0.00</span>
+            <div class="vip-tag">
+                <span>⭐ 会员等级 (满减后额外折扣)</span>
+                <select id="vipSelect">
+                    <option value="0">普通用户 (无折扣)</option>
+                    <option value="1">白银会员 (98折)</option>
+                    <option value="2" selected>黄金会员 (95折)</option>
+                    <option value="3">钻石会员 (9折)</option>
+                </select>
+            </div>
+            <button class="clear-cart" id="clearCartBtn">🗑️ 清空购物车</button>
+        </div>
+        <div style="font-size:0.7rem; margin-top: 12px; background:#fff0e0; padding:4px 12px; border-radius: 40px; display:inline-block;">
+            📢 满减阶梯: 满1000减150 → 满500减60 → 满200减20 (先高后低判断)
+        </div>
+    </div>
+
+    <!-- 代码填空区：所有黄色区域初始完全空白，学习者需手动填写 -->
+    <div class="code-lab">
+        <div class="rule-note">
+            🧪 618满减逻辑（先高门槛后低门槛判断）<br>
+            ▪️ 原价 total → 先判断高门槛满减 (1000→500→200) 更新优惠金额<br>
+            ▪️ <span style="background:#f7e05e; padding:2px 6px;">黄色空白框</span> 需要你补全：<strong>if / elif / else / 比较符(>=) / 冒号(:) / 等号(=)</strong> 等，让程序正确运行。
+        </div>
+
+        <div class="code-panel">
+            <div class="code-line"><span class="keyword">def</span> <span class="string">calculate_618</span>(amount):</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;discount = 0</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="blankIf1" class="blank-yellow blank-short" placeholder="" value=""> amount <input type="text" id="blankOp1" class="blank-yellow blank-op" placeholder="" value=""> 1000 <input type="text" id="blankColon1" class="blank-yellow blank-colon" placeholder="" value=""> </div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;discount = 150</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="blankElif1" class="blank-yellow blank-short" placeholder="" value=""> amount <input type="text" id="blankOp2" class="blank-yellow blank-op" placeholder="" value=""> 500 <input type="text" id="blankColon2" class="blank-yellow blank-colon" placeholder="" value=""> </div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;discount <input type="text" id="blankAssign" class="blank-yellow blank-assign" placeholder="" value=""> 60</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="blankElif2" class="blank-yellow blank-short" placeholder="" value=""> amount <input type="text" id="blankOp3" class="blank-yellow blank-op" placeholder="" value=""> 200 <input type="text" id="blankColon3" class="blank-yellow blank-colon" placeholder="" value=""> </div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;discount = 20</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="blankElse" class="blank-yellow blank-short" placeholder="" value=""> <input type="text" id="blankElseColon" class="blank-yellow blank-colon" placeholder="" value=""></div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;discount = 0</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;after_discount = amount - discount</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> round(after_discount, 2)</div>
+            <div class="comment-light" style="margin-top: 10px;">⬅️ 所有黄色框完全空白 → 你需要手动填写 if / elif / else / >= / : / = 等Python语法元素，使代码正确执行。</div>
+        </div>
+
+        <div class="action-group">
+            <button class="btn-run" id="runCodeBtn">▶ 运行填空 · 结算618订单</button>
+            <button class="btn-reset" id="resetFillBtn">⟳ 重置为标准答案 (自动填入正确语法)</button>
+        </div>
+
+        <div class="result-area" id="resultPanel">
+            <div>💰 最终支付</div>
+            <div class="final-price" id="finalPriceSpan">-- 元</div>
+            <div class="trace-box" id="traceMsg">
+                📍 请先填写黄色框内的代码（if/elif/else/比较符/冒号/等号），然后点击运行，系统会根据你填写的代码执行满减计算。
+            </div>
+        </div>
+    </div>
+    <footer>📖 商务数据分析 · if-elif-else 实战 | 618 口红/电脑/手机满减 | 先高门槛后低门槛判断 | 完全空白填空</footer>
+</div>
+
+<script>
+    // 商品+购物车逻辑
+    let cartAmount = 0;
+    const cartTotalSpan = document.getElementById('cartTotal');
+    const clearBtn = document.getElementById('clearCartBtn');
+    const finalPriceSpan = document.getElementById('finalPriceSpan');
+    const traceMsgDiv = document.getElementById('traceMsg');
+
+    // 所有填空元素 (初始value全部为空字符串)
+    const blankIf1 = document.getElementById('blankIf1');
+    const blankOp1 = document.getElementById('blankOp1');
+    const blankColon1 = document.getElementById('blankColon1');
+    const blankElif1 = document.getElementById('blankElif1');
+    const blankOp2 = document.getElementById('blankOp2');
+    const blankColon2 = document.getElementById('blankColon2');
+    const blankAssign = document.getElementById('blankAssign');
+    const blankElif2 = document.getElementById('blankElif2');
+    const blankOp3 = document.getElementById('blankOp3');
+    const blankColon3 = document.getElementById('blankColon3');
+    const blankElse = document.getElementById('blankElse');
+    const blankElseColon = document.getElementById('blankElseColon');
+
+    const runBtn = document.getElementById('runCodeBtn');
+    const resetFillBtn = document.getElementById('resetFillBtn');
+
+    // 添加商品
+    document.querySelectorAll('.goods-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const price = parseFloat(card.getAttribute('data-price'));
+            if (!isNaN(price)) {
+                cartAmount += price;
+                cartTotalSpan.innerText = cartAmount.toFixed(2);
+                finalPriceSpan.innerHTML = "⏳ 待运行";
+                traceMsgDiv.innerHTML = `✅ 已添加 ${card.querySelector('.goods-title')?.innerText} +¥${price.toFixed(2)}，当前总额 ¥${cartAmount.toFixed(2)}，请填写代码后运行。`;
+                traceMsgDiv.classList.remove('error-trace');
+            }
+        });
+    });
+
+    clearBtn.addEventListener('click', () => {
+        cartAmount = 0;
+        cartTotalSpan.innerText = "0.00";
+        finalPriceSpan.innerHTML = "-- 元";
+        traceMsgDiv.innerHTML = "🛒 购物车已清空，重新添加商品后再运行代码。";
+        traceMsgDiv.classList.remove('error-trace');
+    });
+
+    // 重置为标准正确语法 (将所有空填入正确值，方便教学演示)
+    function resetToCorrect() {
+        // 满减填空 (先高后低：1000→500→200)
+        blankIf1.value = "if";
+        blankOp1.value = ">=";
+        blankColon1.value = ":";
+        blankElif1.value = "elif";
+        blankOp2.value = ">=";
+        blankColon2.value = ":";
+        blankAssign.value = "=";
+        blankElif2.value = "elif";
+        blankOp3.value = ">=";
+        blankColon3.value = ":";
+        blankElse.value = "else";
+        blankElseColon.value = ":";
+        
+        traceMsgDiv.innerHTML = "✨ 已重置为标准答案 (if/elif/else/>=/:/= 正确填写)。你可以修改填空再运行体验。";
+        finalPriceSpan.innerHTML = "❓ 待运行";
+        traceMsgDiv.classList.remove('error-trace');
+    }
+
+    // 核心运行: 校验学生填写的语法并模拟if-elif-else执行 (先高后低满减)
+    function runStudentCode() {
+        let amount = cartAmount;
+
+        // 获取所有填空内容（去除前后空格）
+        let ifKw = blankIf1.value.trim();
+        let op1 = blankOp1.value.trim();
+        let colon1 = blankColon1.value.trim();
+        let elifKw1 = blankElif1.value.trim();
+        let op2 = blankOp2.value.trim();
+        let colon2 = blankColon2.value.trim();
+        let assignKw = blankAssign.value.trim();
+        let elifKw2 = blankElif2.value.trim();
+        let op3 = blankOp3.value.trim();
+        let colon3 = blankColon3.value.trim();
+        let elseKw = blankElse.value.trim();
+        let elseColon = blankElseColon.value.trim();
+
+        // 语法校验
+        let error = "";
+        if (ifKw !== "if") error = "❌ 第一个条件缺少 'if' 关键字";
+        else if (op1 !== ">=" && op1 !== ">") error = "❌ 比较运算符应为 '>=' (大于等于)";
+        else if (colon1 !== ":") error = "❌ if 语句后缺少冒号 ':'";
+        else if (elifKw1 !== "elif") error = "❌ 第二个分支应使用 'elif' 关键字";
+        else if (op2 !== ">=" && op2 !== ">") error = "❌ 比较运算符应为 '>='";
+        else if (colon2 !== ":") error = "❌ elif 语句缺少冒号";
+        else if (assignKw !== "=") error = "❌ 赋值运算符应为 '=' (discount = 60)";
+        else if (elifKw2 !== "elif") error = "❌ 第三个分支应使用 'elif'";
+        else if (op3 !== ">=" && op3 !== ">") error = "❌ 满200比较符应使用 '>='";
+        else if (colon3 !== ":") error = "❌ elif 缺少冒号";
+        else if (elseKw !== "else") error = "❌ else 关键字缺失";
+        else if (elseColon !== ":") error = "❌ else 后缺少冒号";
+
+        if (error) {
+            finalPriceSpan.innerHTML = "⚠️ 语法错误";
+            traceMsgDiv.innerHTML = `<span style="color:#c7254e;">${error}</span><br>💡 请检查黄色区域：正确示例 if / elif / else / >= / : / = 。参考【重置】按钮。`;
+            traceMsgDiv.classList.add("error-trace");
+            return;
+        }
+
+        // 模拟满减阶梯 (先高后低：1000→500→200)
+        let discount = 0;
+        let branchHit = "";
+        if (amount >= 1000) {
+            discount = 150;
+            branchHit = "🎯 命中 满1000减150 (最高门槛)";
+        } else if (amount >= 500) {
+            discount = 60;
+            branchHit = "🎯 命中 满500减60";
+        } else if (amount >= 200) {
+            discount = 20;
+            branchHit = "🎯 命中 满200减20";
+        } else {
+            discount = 0;
+            branchHit = "ℹ️ 未满200，无满减";
+        }
+
+        let afterDiscount = amount - discount;
+        let finalPrice = Math.round(afterDiscount * 100) / 100;
+        if (finalPrice < 0) finalPrice = 0;
+
+        finalPriceSpan.innerHTML = `¥ ${finalPrice.toFixed(2)} 元`;
+
+        let flow = `📊 订单总额: ${amount.toFixed(2)}元<br>`;
+        flow += `🔁 满减分支: ${branchHit} → 优惠金额 ${discount}元<br>`;
+        flow += `💸 满减后金额: ${afterDiscount.toFixed(2)}元<br>`;
+        flow += `<strong>✨ 最终应付: ${finalPrice.toFixed(2)} 元</strong><br>`;
+        flow += `📌 控制流说明: if-elif-else 先判断高门槛(1000)，再依次判断低门槛(500→200)，确保高门槛优惠优先生效。`;
+
+        traceMsgDiv.innerHTML = flow;
+        traceMsgDiv.classList.remove("error-trace");
+    }
+
+    runBtn.addEventListener('click', () => {
+        if (cartAmount === 0) {
+            traceMsgDiv.innerHTML = "🛒 购物车还是空的！请先点击口红/电脑/手机等商品添加购物车，再运行代码。";
+            traceMsgDiv.classList.add("error-trace");
+            finalPriceSpan.innerHTML = "0.00 元";
+            return;
+        }
+        runStudentCode();
+    });
+
+    resetFillBtn.addEventListener('click', resetToCorrect);
+
+    window.addEventListener('load', () => {
+        // 确保所有填空初始完全空白 (value = '')
+        const allBlanks = document.querySelectorAll('.blank-yellow');
+        allBlanks.forEach(blank => { blank.value = ''; });
+        cartAmount = 0;
+        cartTotalSpan.innerText = "0.00";
+        finalPriceSpan.innerHTML = "-- 元";
+        traceMsgDiv.innerHTML = "🎉 618活动上线！所有黄色框【完全空白】，请根据满减规则手动填写 if / elif / else / >= / : / = 等，然后添加商品并运行代码。";
+        traceMsgDiv.classList.remove('error-trace');
+    });
+</script>
+</body>
+</html>
